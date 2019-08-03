@@ -31,7 +31,7 @@ public final class Main {
             value = sc.nextLine();
 
             try {
-                grille.setValue(x - 1, y - 1, value.charAt(0));
+                grille.setValue(x, y, value.charAt(0));
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }

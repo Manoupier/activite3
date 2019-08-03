@@ -230,6 +230,10 @@ public class GrilleImpl implements Grille {
      * @return numero du grand carre
      */
     private int trouveCarre(final int x, final int y) {
+        if (x == 0 || y == 0) {
+            return 1;
+        }
+
         int abs; //coordonnées de la ligne dans le repere du grand carre
         int ord; //coordonnées de la colonne dans le repere du grand carre
         abs = x % this.squareLength == 0
@@ -237,8 +241,6 @@ public class GrilleImpl implements Grille {
 
         ord = y % this.squareLength == 0
                 ? y / this.squareLength : y / this.squareLength + 1;
-        //abs = abs == 0 ? 1 : abs;
-        //ord = ord == 0 ? 1 : ord;
 
         if (ord == 2) {
             return abs + this.squareLength;
