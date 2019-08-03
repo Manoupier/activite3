@@ -1,3 +1,5 @@
-com\activite2\Calcul.class
-com\emiage\sudoku\GrilleImpl.class
-com\emiage\sudoku\Grille.class
+com\activite3\Grille.class
+com\activite3\Calcul.class
+com\activite3\Main.class
+com\activite3\Console.class
+com\activite3\GrilleImpl.class

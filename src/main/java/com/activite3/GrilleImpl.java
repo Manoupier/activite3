@@ -1,9 +1,10 @@
-package com.emiage.sudoku;
+package com.activite3;
 
 import java.util.Arrays;
 
 /**
  * Implementation d'une grille.
+ * @author KENNE
  */
 public class GrilleImpl implements Grille {
     /**
@@ -16,8 +17,17 @@ public class GrilleImpl implements Grille {
      */
     private int taille;
 
+    /**
+     * Taille d'un grand carre.
+     */
+    private final int squareLength = 3;
+
+    /**
+     * Constructeur de grille.
+     */
     public GrilleImpl() {
-        this.taille = possible.length; //La taille de la grille est egale au nombre de caracteres possibles
+        this.taille = POSSIBLE.length; //La taille de la grille est egale au
+        // nombre de caracteres possibles
 
         //On initialise toutes les case a la valeur vide
         this.grille = new char[this.taille][this.taille];
@@ -28,34 +38,73 @@ public class GrilleImpl implements Grille {
         }
     }
 
+    /**
+     *
+     * @return largeur/hauteur de la grille.
+     */
     public int getDimension() {
         return this.taille;
     }
 
-    public void setValue(int x, int y, char value) throws IllegalArgumentException {
+    /**
+     * Affecte une valeur dans la grille.
+     * @param x    position x dans la grille
+     * @param y    position y dans la grille
+     * @param value    valeur a mettre dans la case
+     * @throws IllegalArgumentException si x ou y sont hors bornes (0-8)
+     * @throws IllegalArgumentException si la valeur est interdite aux vues des
+     * autres valeurs de la grille
+     * @throws IllegalArgumentException si valeur n'est pas un caractere
+     * autorise ('1',...'9')
+     */
+    public void setValue(final int x, final int y, final char value)
+            throws IllegalArgumentException {
         if (possible(x, y, value)) {
             this.grille[x][y] = value;
         }
     }
 
-    public char getValue(int x, int y) throws IllegalArgumentException {
+    /**
+     * Recupere une valeur de la grille.
+     * @param x    position x dans la grille
+     * @param y    position y dans la grille
+     * @return valeur dans la case x,y
+     * @throws IllegalArgumentException si x ou y sont hors bornes (0-8)
+     */
+    public char getValue(final int x, final int y)
+            throws IllegalArgumentException {
         checkPositions(x, y);
         return this.grille[x][y];
     }
 
+    /**
+     * Test si une grille est terminee.
+     * @return true si la grille est complete
+     */
     public boolean complete() {
         //La grille est complete quand elle ne contient plus de caractere vide
         return Arrays.toString(this.grille).indexOf(EMPTY) == -1;
     }
 
-    public boolean possible(int x, int y, char value) throws IllegalArgumentException {
+    /**
+     * test si une valeur est possible dans la grille par rapport
+     * a ce qu'elle contient deja.
+     * @param x position x dans la grille
+     * @param y position y dans la grille
+     * @param value valeur de la case x,y
+     * @return vraie si valeur peut etre assignee a la case x,y
+     * @throws IllegalArgumentException si x ou y sont hors bornes (0-8)
+     */
+    public boolean possible(final int x, final int y, final char value)
+            throws IllegalArgumentException {
         checkPositions(x, y);
         checkValue(value);
         checkLigne(x, value);
         checkColonne(y, value);
-        checkCarre(trouveCarre(x,y), value);
+        checkCarre(trouveCarre(x, y), value);
 
-        //valeur interdite si la cellule de la grille contient déjà la valeur qu'on veut lui assigner
+        //valeur interdite si la cellule de la grille
+        // contient déjà la valeur qu'on veut lui assigner
         return this.grille[x][y] != value;
 
     }
@@ -64,54 +113,108 @@ public class GrilleImpl implements Grille {
      * Affiche la grille au joueur.
      */
     public void affiche() {
-        System.out.println(stringOfChar('-', 4 * this.taille));
+        final int factor = 4;
+        System.out.println(stringOfChar('-', factor * this.taille));
         for (int i = 0; i < this.taille; i++) {
             for (int j = 0; j < this.taille; j++) {
-                System.out.print(Console.FOREGROUNDS[trouveCarre(i+1,j+1)]+ "| "+this.grille[i][j]+ " ");
+                System.out.print(Console.FOREGROUNDS[trouveCarre(i + 1,
+                        j + 1)] + "| " + this.grille[i][j] + " ");
                 System.out.print(Console.ANSI_RESET);
             }
             System.out.println("|");
-            System.out.println(stringOfChar('-', 4 * this.taille));
+            System.out.println(stringOfChar('-', factor * this.taille));
         }
     }
 
-    private void checkPositions(int x, int y) throws IllegalArgumentException {
+    /**
+     * Vérifie si les coordonnées auxquels ont veut positionner
+     * une lettre sont valides.
+     * @param x position x dans la grille
+     * @param y position y dans la grille
+     * @throws IllegalArgumentException si x ou y sont hors bornes (0-8)
+     */
+    private void checkPositions(final int x, final int y)
+            throws IllegalArgumentException {
         if (x < 0 || x >= this.taille || y < 0 || y >= this.taille) {
-            throw new IllegalArgumentException("Les parametres de position sont invalides");
+            throw new IllegalArgumentException("Les parametres de position "
+                   + "sont invalides");
         }
     }
 
-    private void checkValue(char value) throws IllegalArgumentException {
-        if (Arrays.toString(possible).indexOf(value) == -1) {
-            throw new IllegalArgumentException("Le parametre valeur est incorrect");
+    /**
+     * Vérifie si la valeur qu'on veut positionner est correcte.
+     * @param value valeur a positionner
+     * @throws IllegalArgumentException si valeur n'est pas un
+     * caractere autorise
+     */
+    private void checkValue(final char value) throws IllegalArgumentException {
+        if (Arrays.toString(POSSIBLE).indexOf(value) == -1) {
+            throw new IllegalArgumentException("Le parametre valeur "
+                   + "est incorrect");
         }
     }
 
-    private void checkLigne(int ligne, char value) throws IllegalArgumentException {
+    /**
+     * Vérifie si la valeur qu'on veut positionner n'est pas
+     * encore présente sur la ligne.
+     * @param ligne ligne de la grille
+     * @param value valeur a positionner
+     * @throws IllegalArgumentException si valeur est deja
+     * presente sur la ligne
+     */
+    private void checkLigne(final int ligne, final char value)
+            throws IllegalArgumentException {
         if (Arrays.toString(ligne(ligne)).indexOf(value) != -1) {
-            throw new IllegalArgumentException("Cette valeur a déjà été utilisée sur cette ligne");
+            throw new IllegalArgumentException("Cette valeur a "
+                   + "déjà été utilisée sur cette ligne");
         }
     }
 
-    private void checkColonne(int col, char value) throws IllegalArgumentException {
+    /**
+     * Vérifie si la valeur qu'on veut positionner n'est pas
+     * encore présente sur la colonne.
+     * @param col colonne de la grille
+     * @param value valeur a affecter a la case
+     * @throws IllegalArgumentException si valeur est deja
+     * presente sur le colonne
+     */
+    private void checkColonne(final int col, final char value)
+            throws IllegalArgumentException {
         if (Arrays.toString(colonne(col)).indexOf(value) != -1) {
-            throw new IllegalArgumentException("Cette valeur a déjà été utilisée sur cette colonne");
+            throw new IllegalArgumentException("Cette valeur a déjà été "
+                    + "utilisée sur cette colonne");
         }
     }
 
-    private void checkCarre(int num, char value) throws IllegalArgumentException {
+    /**
+     * Vérifie sur la valeur qu'on veut positionner n'est pas encore
+     * presente dans le grand carre.
+     * @param num numero du grand carre
+     * @param value valeur a positionner
+     * @throws IllegalArgumentException si valeur est deja
+     * presente dans le carre
+     */
+    private void checkCarre(final int num, final char value)
+            throws IllegalArgumentException {
         char[][] carre = carree(num);
         StringBuilder tab = new StringBuilder();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < this.squareLength; i++) {
             tab.append(Arrays.toString(carre[i]));
         }
 
         if (tab.toString().indexOf(value) != -1) {
-            throw new IllegalArgumentException("Cette valeur a déjà été utilisée dans ce carré");
+            throw new IllegalArgumentException("Cette valeur a déjà "
+                  + "été utilisée dans ce carré");
         }
     }
 
-    private String stringOfChar(char c, int length) {
+    /**
+     * Construit une chaine de caractere a partir d'un motif.
+     * @param c motif
+     * @param length longueur de la chaine
+     * @return chaine
+     */
+    private String stringOfChar(final char c, final int length) {
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < length; i++) {
             result.append(c);
@@ -126,18 +229,21 @@ public class GrilleImpl implements Grille {
      * @param y numero de colonne de la case
      * @return numero du grand carre
      */
-    private int trouveCarre(int x, int y) {
+    private int trouveCarre(final int x, final int y) {
         int abs; //coordonnées de la ligne dans le repere du grand carre
         int ord; //coordonnées de la colonne dans le repere du grand carre
-        abs = x % 3 == 0 ? x / 3 : x/3 +1;
-        ord = y % 3 == 0 ? y / 3 : y/3 +1;
+        abs = x % this.squareLength == 0
+                ? x / this.squareLength : x / this.squareLength + 1;
+
+        ord = y % this.squareLength == 0
+                ? y / this.squareLength : y / this.squareLength + 1;
         //abs = abs == 0 ? 1 : abs;
         //ord = ord == 0 ? 1 : ord;
 
         if (ord == 2) {
-            return abs + 3;
-        } else if (ord == 3) {
-            return abs + 6;
+            return abs + this.squareLength;
+        } else if (ord == this.squareLength) {
+            return abs + this.squareLength * 2;
         }
 
         return abs;
@@ -146,9 +252,9 @@ public class GrilleImpl implements Grille {
     /**
      * Les éléments d'une ligne de la grille.
      * @param ligne numero de la ligne
-     * @return Ligne
+     * @return Elements de la ligne
      */
-    private char[] ligne(int ligne) {
+    private char[] ligne(final int ligne) {
         char[] result = new char[this.taille];
         System.arraycopy(this.grille[ligne], 0, result, 0, this.taille);
         return result;
@@ -156,10 +262,10 @@ public class GrilleImpl implements Grille {
 
     /**
      * Les éléments d'une colonne de la grille.
-     * @param ligne numero de la colonne
+     * @param col numero de la colonne
      * @return Elements de la colonne
      */
-    private char[] colonne(int col) {
+    private char[] colonne(final int col) {
         char[] result = new char[this.taille];
         for (int i = 0; i < this.taille; i++) {
             result[i] = this.grille[i][col];
@@ -172,50 +278,64 @@ public class GrilleImpl implements Grille {
      * @param num numéro du carré
      * @return Eléments du carre
      */
-    private char[][] carree(int num) {
+    private char[][] carree(final int num) {
+        final int one = 1;
+        final int two = 2;
+        final int three = 3;
+        final int four = 4;
+        final int five = 5;
+        final int six = 6;
+        final int seven = 7;
+        final int eight = 8;
+        final int nine = 9;
+
         int x = 0, y = 0;
         switch (num) {
-            case 1:
+            case one:
                 x = 0;
                 y = 0;
                 break;
-            case 2:
-                x = 3;
+            case two:
+                x = this.squareLength;
                 y = 0;
                 break;
-            case 3:
-                x = 6;
+            case three:
+                x = this.squareLength * 2;
                 y = 0;
                 break;
-            case 4:
+            case four:
                 x = 0;
-                y = 3;
+                y = this.squareLength;
                 break;
-            case 5:
-                x = 3;
-                y = 3;
+            case five:
+                x = this.squareLength;
+                y = this.squareLength;
                 break;
-            case 6:
-                x = 6;
-                y = 3;
+            case six:
+                x = this.squareLength * 2;
+                y = this.squareLength;
                 break;
-            case 7:
+            case seven:
                 x = 0;
-                y = 6;
+                y = this.squareLength * 2;
                 break;
-            case 8:
-                x = 3;
-                y = 6;
+            case eight:
+                x = this.squareLength;
+                y = this.squareLength * 2;
                 break;
-            case 9:
-                x = 6;
-                y = 6;
+            case nine:
+                x = this.squareLength * 2;
+                y = this.squareLength * 2;
                 break;
+                default:
+                    x = -1;
+                    y = -1;
+                    break;
         }
 
-        char[][] result = new char[3][3];
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        char[][] result = new char[this.squareLength][this.squareLength];
+        for (int i = 0; i < this.squareLength; i++) {
+            for (int j = 0; j < this.squareLength; j++) {
                 result[i][j] = this.grille[x + i][y + j];
             }
         }

@@ -1,4 +1,4 @@
-package com.activite2;
+package com.activite3;
 
 import org.junit.Test;
 

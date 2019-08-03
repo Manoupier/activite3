@@ -1,4 +1,4 @@
-package com.activite2;
+package com.activite3;
 
 /**
  * Définition de la classe Calcul.
@@ -32,7 +32,7 @@ public class Calcul {
      * @param a premier opérande (numérateur)
      * @param b deuxième opérande (dénominateur)
      * @return a / b si b != 0
-     * @throw IllegalArgumentException si b == 0
+     * @throws IllegalArgumentException si b == 0
      */
     public int division(final int a, final int b) {
         if (b == 0) {

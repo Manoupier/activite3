@@ -1,15 +1,18 @@
-package com.emiage.sudoku;
+package com.activite3;
 
 import java.util.Scanner;
 
 /**
- * @author Jirez Tchinda <jireztchinda@epstechgroup.com>
- * copyright eps-technologies
- * Date 02/08/19
- * Time 13:31
+ * Classe principale.
+ * @author KENNE
  **/
-public class Main {
-    public static void main(String[] args) {
+public final class Main {
+
+    /**
+     * Point d'entre de l'application.
+     * @param args arguments
+     */
+    public static void main(final String[] args) {
         Grille grille = new GrilleImpl();
         int x, y;
         String value;
@@ -28,7 +31,7 @@ public class Main {
             value = sc.nextLine();
 
             try {
-                grille.setValue(x-1, y-1, value.charAt(0));
+                grille.setValue(x - 1, y - 1, value.charAt(0));
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
@@ -37,5 +40,12 @@ public class Main {
             //Reaffichage de la grille
             grille.affiche();
         }
+    }
+
+    /**
+     * Constructeur prive.
+     */
+    private Main() {
+
     }
 }
