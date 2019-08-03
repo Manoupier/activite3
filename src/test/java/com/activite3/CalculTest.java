@@ -22,12 +22,12 @@ public class CalculTest {
     @Test
     public void maFonction() {
         Calcul calcul = new Calcul();
-        assertEquals(4, calcul.maFonction(8,2));
+        assertEquals(2, calcul.maFonction(8,2));
  }
 
     @Test
     public void division() {
         Calcul calcul = new Calcul();
-        assertEquals(2, calcul.division(20,5));
+        assertEquals(4, calcul.division(20,5));
     }
 }

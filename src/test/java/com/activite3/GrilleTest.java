@@ -22,7 +22,7 @@ public class GrilleTest {
     @Test
     public void getDimension() {
         Grille grille = new GrilleImpl();
-        Assert.assertEquals(16, grille.getDimension());
+        Assert.assertEquals(9, grille.getDimension());
     }
 
     @Test
@@ -31,7 +31,7 @@ public class GrilleTest {
             this.grille.possible(50, 2, 'p');
             Assert.fail();
         } catch (IllegalArgumentException e) {
-
+            //e.printStackTrace();
         }
     }
 
@@ -44,19 +44,19 @@ public class GrilleTest {
     @Test
     public void complete() {
         Grille grille = new GrilleImpl();
-        Assert.assertEquals(false, grille.complete());
+        Assert.assertFalse(grille.complete());
     }
 
     @Test
     public void possible() {
         Grille grille = new GrilleImpl();
-        Assert.assertEquals(true, grille.possible(1,2, 'c'));
+        Assert.assertTrue(grille.possible(1, 2, '5'));
 
         try {
             grille.possible(20, 7, 'd');
             Assert.fail("Les parametres de position sont invalides");
         } catch (IllegalArgumentException e) {
-
+            //e.printStackTrace();
         }
     }
 }
